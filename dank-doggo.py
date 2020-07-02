@@ -5,13 +5,17 @@ import praw
 import logging
 import html
 import sys
+import os
 import json
 
 from time import sleep
 from datetime import datetime
 
-with open('credentials.json') as f:
-    credentials = json.loads(f.read())
+credentials = {}
+
+credentials["token"] = os.environ['TOKEN']
+credentials["subreddit"] = os.environ['SUB']
+credentials["channel"] = os.environ['CHANNEL']
 
 log = logging.getLogger('doggo')
 log.setLevel(logging.DEBUG)
@@ -57,7 +61,12 @@ if not last_sub_id:
 else:
     log.info("Last posted submission is {}".format(last_sub_id))
 
-r = praw.Reddit(user_agent="Dank Doggo by Harsha :D", site_name="default")
+r = praw.Reddit(user_agent="Dank Doggo by Harsha :D", 
+                site_name="default",
+                client_id=os.environ.CLIENT_ID,
+                client_secret=os.environ.CLIENT_SECRET,
+                username=os.environ.RUSERNAME,
+                password=os.environ.RPASS)
 r.read_only = True
 subreddit = r.subreddit(sub)
 
