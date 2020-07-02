@@ -5,7 +5,7 @@ import praw
 import logging
 import html
 import sys
-import os
+from boto.s3.connection import S3Connection
 import json
 
 from time import sleep
