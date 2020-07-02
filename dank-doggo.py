@@ -5,7 +5,7 @@ import praw
 import logging
 import html
 import sys
-from boto.s3.connection import S3Connection
+import os
 import json
 
 from time import sleep
@@ -13,9 +13,9 @@ from datetime import datetime
 
 credentials = {}
 
-credentials["token"] = os.environ['TOKEN']
-credentials["subreddit"] = os.environ['SUB']
-credentials["channel"] = os.environ['CHANNEL']
+credentials["token"] = os.environ.get('TOKEN')
+credentials["subreddit"] = os.environ.get('SUB')
+credentials["channel"] = os.environ.get('CHANNEL')
 
 log = logging.getLogger('doggo')
 log.setLevel(logging.DEBUG)
@@ -35,7 +35,7 @@ if credentials["channel"] == "":
 
 token = credentials["token"]
 channel = credentials["channel"]
-sub = '+'.join(credentials["subreddit"])
+sub = "dogpictures"
 start_time = datetime.utcnow().timestamp()
 
 def prev_submissions():
@@ -62,11 +62,10 @@ else:
     log.info("Last posted submission is {}".format(last_sub_id))
 
 r = praw.Reddit(user_agent="Dank Doggo by Harsha :D", 
-                site_name="default",
-                client_id=os.environ.CLIENT_ID,
-                client_secret=os.environ.CLIENT_SECRET,
-                username=os.environ.RUSERNAME,
-                password=os.environ.RPASS)
+                client_id=os.environ.get('CLIENT_ID'),
+                client_secret=os.environ.get('CLIENT_SECRET'),
+                username=os.environ.get('RUSERNAME'),
+                password=os.environ.get('RPASS'))
 r.read_only = True
 subreddit = r.subreddit(sub)
 
@@ -95,7 +94,7 @@ while True:
                 bot.sendPhoto(chat_id=channel, photo=submission.url, caption=message)
                 # bot.sendMessage(chat_id=channel, parse_mode=telegram.ParseMode.HTML, text=message)
                 write_submissions(submission.id)
-                sleep(600)
+                sleep(300)
             except Exception as e:
                 log.exception("Error parsing {}".format(link))
     except Exception as e:
