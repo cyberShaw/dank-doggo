@@ -1,1 +1,1 @@
-web: python dank-doggo.py
+worker: python dank-doggo.py
